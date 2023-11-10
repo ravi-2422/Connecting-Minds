@@ -1,4 +1,5 @@
 const User = require('../modals/userModel');
+const Mentor = require('../modals/mentorModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -102,3 +103,32 @@ exports.userInfo = async (req,res)=>{
     }
 }
 
+// apply for mentor
+
+exports.applyforMentor = async (req, res)=>{
+    try {
+        const newMentor = new Mentor({ ...req.body });
+        const email = req.body.email;
+        const existingMentor = await Mentor.findOne({email});
+        if(existingMentor){
+            return res.status(200).send({
+                message : "Already applied",
+                status : false,
+            })
+        }
+        await newMentor.save();
+        res.status(200).send({
+            message : "now become mentor",
+            status : "true",
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message : "something went wrong on apply for mentor !",
+            status : false,
+        })
+    }
+}
+
+
+// update 

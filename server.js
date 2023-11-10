@@ -11,8 +11,10 @@ connectDatebase();
 // routing
 
 const userRouter = require('./routes/userRoutes');
+const mentorRouter = require('./routes/mentorRoutes');
 
 app.use("/api/user", userRouter);
+app.use("/api/mentor", mentorRouter);
 
 app.listen(PORT,()=>{
     console.log(`server is running on port ${PORT}`);

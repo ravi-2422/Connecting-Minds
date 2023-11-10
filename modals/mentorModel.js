@@ -1,6 +1,18 @@
 const mongoose = require('mongoose');
 
 const mentorSchema = new mongoose.Schema({
+    firstName : {
+        type : String,
+        required : true,
+    },
+    lastName : {
+        type : String,
+        required : true,
+    },
+    email : {
+        type : String,
+        required : true,
+    },
     institution : {
         type : String,
         required : true,
@@ -15,10 +27,9 @@ const mentorSchema = new mongoose.Schema({
     }, 
     timing : {
         type: Array,
-        required: true,
     }
 
 });
 
-const mentorModel = mongoose.model("users", mentorSchema);
+const mentorModel = mongoose.model("mentors", mentorSchema);
 module.exports = mentorModel;
