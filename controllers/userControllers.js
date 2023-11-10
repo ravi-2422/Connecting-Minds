@@ -34,6 +34,8 @@ exports.registerUser = async (req, res)=>{
     }
 }
 
+// api for signin
+
 exports.loginUser = async (req, res)=>{
     try {
         const {email, password} = req.body;
@@ -53,12 +55,14 @@ exports.loginUser = async (req, res)=>{
                 status : false,
             })
         } else {
-            const token = jwt.sign({id : user._id}, process.env.JWT_SECRET,{
+                const token = jwt.sign({id : user._id}, process.env.JWT_SECRET,{
                 expiresIn : process.env.TOKEN_EXPIRY,
             })
+            //console.log(token);
             res.status(200).send({
                 message : "Signin sucessful",
                 status : true,
+                token,
             })
         }
         
@@ -70,3 +74,31 @@ exports.loginUser = async (req, res)=>{
         })
     }
 }
+
+// api for user info
+
+exports.userInfo = async (req,res)=>{
+    try {
+        const {userId} = req.body;
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(200).send({
+                message : "User not found",
+                status : false,
+            }) 
+        } else {
+            res.status(200).send({
+                message : "user found",
+                status : true,
+                user,
+            })
+        }      
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message : "something went wrong !",
+            status : false,
+        })
+    }
+}
+

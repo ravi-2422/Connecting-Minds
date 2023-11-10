@@ -1,1 +1,1 @@
-# Connecting mind is development phase
+# Connecting mind is on development phase
