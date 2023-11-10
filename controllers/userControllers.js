@@ -1,5 +1,6 @@
 const User = require('../modals/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.registerUser = async (req, res)=>{
     try {
@@ -28,6 +29,43 @@ exports.registerUser = async (req, res)=>{
         console.log(error);
         res.status(500).send({
             message : "Error while creating the user",
+            status : false,
+        })
+    }
+}
+
+exports.loginUser = async (req, res)=>{
+    try {
+        const {email, password} = req.body;
+        const user = await User.findOne({email});
+        if(!user){
+           return res.status(200).send({
+                message : "You have not any account , register first",
+                status : false,
+            });
+        }
+
+         // varifying the user
+        const ispasswordCorrect = await bcrypt.compare(password,user.password);
+        if(!ispasswordCorrect){
+            return res.status(200).send({
+                message: "Invalid credentials",
+                status : false,
+            })
+        } else {
+            const token = jwt.sign({id : user._id}, process.env.JWT_SECRET,{
+                expiresIn : process.env.TOKEN_EXPIRY,
+            })
+            res.status(200).send({
+                message : "Signin sucessful",
+                status : true,
+            })
+        }
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            message : "Error while signing",
             status : false,
         })
     }
